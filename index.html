@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0;
-            overflow: hidden; /* Removes scrollbars */
+            overflow: hidden;
         }
         canvas {
             display: block;
@@ -16,13 +16,12 @@
 </head>
 <body>
     <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@<version>/examples/jsm/"
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@148/build/three.module.js"
+        }
     }
-  }
-</script>
-    <script src="script.js"></script>
+    </script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
