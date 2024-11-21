@@ -1,54 +1,42 @@
-// Import Three.js
 import * as THREE from 'three';
 
-// Step 1: Create a Scene
+// Scene setup
 const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg') });
 
-// Step 2: Set Up a Camera
-const camera = new THREE.PerspectiveCamera(
-    75, // Field of View (FOV)
-    window.innerWidth / window.innerHeight, // Aspect Ratio
-    0.1, // Near Clipping Plane
-    1000 // Far Clipping Plane
-);
-camera.position.z = 5; // Move the camera back so we can see the objects
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 
-// Step 3: Set Up a Renderer
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight); // Set renderer size
-document.body.appendChild(renderer.domElement); // Append the renderer to the DOM
+camera.position.setZ(30);
 
-// Step 4: Create a Cube
-const geometry = new THREE.BoxGeometry(); // A box shape
-const material = new THREE.MeshStandardMaterial({ color: 0x0077ff }); // Material for the cube
-const cube = new THREE.Mesh(geometry, material); // Combine geometry and material into a mesh
-scene.add(cube); // Add the cube to the scene
+// Create particles
+const particlesGeometry = new THREE.BufferGeometry();
+const particleCount = 1000;
+const positions = new Float32Array(particleCount * 3);
 
-// Step 5: Add Lighting
-const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft light
-scene.add(ambientLight);
+for (let i = 0; i < particleCount * 3; i++) {
+    positions[i] = (Math.random() - 0.5) * 100;
+}
 
-const pointLight = new THREE.PointLight(0xffffff, 1); // Intense point light
-pointLight.position.set(5, 5, 5);
-scene.add(pointLight);
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-// Step 6: Animation Loop
+const particlesMaterial = new THREE.PointsMaterial({
+    color: 0x00ff00,
+    size: 0.2,
+});
+
+const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+scene.add(particles);
+
+// Animation loop
 function animate() {
     requestAnimationFrame(animate);
 
-    // Rotate the cube
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    particles.rotation.x += 0.001;
+    particles.rotation.y += 0.001;
 
-    renderer.render(scene, camera); // Render the scene from the camera's perspective
+    renderer.render(scene, camera);
 }
 
-// Resize handler
-window.addEventListener('resize', () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-});
-
-// Start the animation loop
 animate();
